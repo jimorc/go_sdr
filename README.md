@@ -33,3 +33,12 @@ Prior to downloading this project from GitHub, you will need the following softw
     - soapyrtlsdr
     - librtlsdr
     - libusb
+
+### Building on Ubuntu
+
+The following are incomplete instructions.
+
+- SoapySDR and related libraries. Install the following:
+    - apt install libsoapysdr0.8 libsoapysdr-doc libsoapysdr-dev
+    - apt install librtlsdr0
+ 
