@@ -8,9 +8,9 @@ __Be Forwarned:__
 While I have good intentions here, I am using it to learn Go. As such, and given my track record with large projects, it is
 probable that this project may never reach a usable state.
 
-This project is in its very intial stage and there is little that is usable at this point.
+This project is in its very initial stage and there is little that is usable at this point.
 
-## Building gosdr
+## Building go_sdr
 
 All development at the moment is being done on an M1 Pro Macbook Pro running MacOS 14, so the only instructions provided 
 below are for that system. I spent a limited amount of time setting it up on Kubuntu 22.04 and incomplete instructions for that
