@@ -64,7 +64,7 @@ The following commands need to be executed in your terminal before `go` is calle
 ```
 export CGO_CFLAGS="-I/usr/local/opt/soapysdr/include"
 export CGO_LDFLAGS="-L/usr/local/opt/soapysdr/lib"
-export GOARCH="arm64"
+export GOARCH="amd64"
 export CGO_ENABLED=1
 ```
 You can execute these commands in your terminal before running:
