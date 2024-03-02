@@ -1,5 +1,5 @@
-# gosdr
-An SDR Receiver written in Go
+# go_sdr
+An SDR Receiver written in Go.
 
 ## Status
 
