@@ -33,6 +33,7 @@ Prior to downloading this project from GitHub, you will need the following softw
 - SoapySDR and related libraries. Install SoapySDR libraries using Homebrew:
     ```
     brew install soapysdr
+    brew install soapyrtlsdr
     ```
 
 #### Building for Apple Silicon
