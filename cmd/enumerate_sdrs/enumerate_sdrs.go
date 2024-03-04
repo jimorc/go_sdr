@@ -94,6 +94,9 @@ func displayDetails(dev *device.SDRDevice) {
 
 	// Registers
 	displayRegisters(dev)
+
+	// Device Sensor
+	displaySensors(dev)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -210,6 +213,18 @@ func displayRegisters(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("Registers: [none]")
+	}
+}
+
+func displaySensors(dev *device.SDRDevice) {
+	sensors := dev.ListSensors()
+	if len(sensors) > 0 {
+		fmt.Println("Sensors:")
+		for i, sensor := range sensors {
+			fmt.Printf("  Sensor#%d: %v/n", i, sensor)
+		}
+	} else {
+		fmt.Println("Sensors: [none]")
 	}
 }
 
