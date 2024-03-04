@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
@@ -36,10 +37,41 @@ func main() {
 
 	if len(devices) == 0 {
 		fmt.Printf("No devices found!!\n")
+		return
+	}
+
+	// Convert device info arguments for opening all detected devices
+	deviceArgs := make([]map[string]string, len(devices))
+	for i, dev := range devices {
+		deviceArgs[i] = map[string]string{
+			"label": dev["label"],
+		}
+	}
+
+	// Open all devices
+	devs, err := device.MakeList(deviceArgs)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	for i, dev := range devs {
+		fmt.Printf("***************\n")
+		fmt.Printf("Device: %v\n", devices[i]["label"])
+		fmt.Printf("***************\n")
+
+		displayDetails(dev)
 	}
 }
 
-// nlogSoapy is a function that is used to receive Soapy messages to be logged
+// displayDetails displays the details and information for a device (for all its directions and channels)
+func displayDetails(dev *device.SDRDevice) {
+	fmt.Printf("***************\n")
+	fmt.Printf("Device Information\n")
+	fmt.Printf("***************\n")
+	fmt.Printf("%v", *dev)
+}
+
+// logSoapy is a function that is used to receive Soapy messages to be logged
 func logSoapy(level sdrlogger.SDRLogLevel, message string) {
 	levelStr := "Unknown"
 	switch level {
