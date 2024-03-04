@@ -100,6 +100,10 @@ func displayDetails(dev *device.SDRDevice) {
 
 	// Time Sources
 	displayTimeSources(dev)
+
+	// Direction details
+	displayDirectionDetails(dev, device.DirectionTX)
+	displayDirectionDetails(dev, device.DirectionRX)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -236,7 +240,7 @@ func displaySensors(dev *device.SDRDevice) {
 	}
 }
 
-// displayTimeSources lists all of a device's time sources.
+// displayTimeSources lists all of a device's time sources and hardware time if any
 func displayTimeSources(dev *device.SDRDevice) {
 	timeSources := dev.ListTimeSources()
 	if len(timeSources) > 0 {
@@ -247,6 +251,31 @@ func displayTimeSources(dev *device.SDRDevice) {
 	} else {
 		fmt.Println("Time Sources: [none]")
 	}
+
+	hasHardwareTime := dev.HasHardwareTime("")
+	fmt.Printf("Has Hardware Time: %v\n", hasHardwareTime)
+	if hasHardwareTime {
+		fmt.Printf("  Hardware Time: %v\n", dev.GetHardwareTime(""))
+	}
+}
+
+// displayDirectionDetails prints info about TX and RX channels
+func displayDirectionDetails(dev *device.SDRDevice, direction device.Direction) {
+	if direction == device.DirectionTX {
+		fmt.Println("Direction TX")
+	} else {
+		fmt.Println("Direction RX")
+	}
+
+	frontEndMapping := dev.GetFrontendMapping(direction)
+	if len(frontEndMapping) > 0 {
+		fmt.Printf("  FrontendMapping: %v\n", frontEndMapping)
+	} else {
+		fmt.Println("  FrontendMapping: [none]")
+	}
+
+	numChannels := dev.GetNumChannels(direction)
+	fmt.Printf("  Number of Channels: %v\n", numChannels)
 }
 
 // logSoapy receives and prints Soapy messages to be logged
