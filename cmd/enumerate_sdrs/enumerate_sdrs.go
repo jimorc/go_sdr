@@ -98,6 +98,47 @@ func displayDetails(dev *device.SDRDevice) {
 	} else {
 		fmt.Println("GPIO Banks: [none]")
 	}
+
+	// Settings
+	settings := dev.GetSettingInfo()
+	if len(settings) > 0 {
+		for i, setting := range settings {
+			fmt.Printf("Setting#%d:\n", i)
+			displaySettingValues(setting)
+		}
+	} else {
+		fmt.Println("Settings: [none]")
+	}
+}
+
+// displaySettingValues prints each setting value
+func displaySettingValues(setting device.SDRArgInfo) {
+	fmt.Printf("  key: %v\n", setting.Key)
+	fmt.Printf("  value: %v\n", setting.Value)
+	fmt.Printf("  name: %v\n", setting.Name)
+	fmt.Printf("  description: %v\n", setting.Description)
+	fmt.Printf("  unit: %v\n", setting.Unit)
+	var argType string = "unknown type"
+	switch setting.Type {
+	case device.ArgInfoBool:
+		argType = "bool"
+	case device.ArgInfoInt:
+		argType = "integer"
+	case device.ArgInfoFloat:
+		argType = "float"
+	case device.ArgInfoString:
+		argType = "string"
+	}
+	fmt.Printf("  type: %v\n", argType)
+	fmt.Printf("  range: %v\n", setting.Range.ToString())
+	numOptions := setting.NumOptions
+	if numOptions > 0 {
+		fmt.Printf("  options: %v\n", setting.Options)
+		fmt.Printf("  option names: %v\n", setting.OptionNames)
+	} else {
+		fmt.Println("  options: [none]")
+		fmt.Println("  option names: [none]")
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
