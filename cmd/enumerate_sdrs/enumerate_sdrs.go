@@ -79,9 +79,28 @@ func displayDetails(dev *device.SDRDevice) {
 	// Print keys and info for the device
 	fmt.Printf("DriverKey: %v\n", dev.GetDriverKey())
 	fmt.Printf("HardwareKey: %v\n", dev.GetHardwareKey())
+
+	hardwareInfo := dev.GetHardwareInfo()
+	if len(hardwareInfo) > 0 {
+		for k, v := range hardwareInfo {
+			fmt.Printf("HardwareInfo: %v: %v\n", k, v)
+		}
+	} else {
+		fmt.Println("HardwareInfo: [none]")
+	}
+
+	// GPIO
+	banks := dev.ListGPIOBanks()
+	if len(banks) > 0 {
+		for i, bank := range banks {
+			fmt.Printf("GPIO Bank#%d: %v\n", i, bank)
+		}
+	} else {
+		fmt.Println("GPIO Banks: [none]")
+	}
 }
 
-// logSoapy is a function that is used to receive Soapy messages to be logged
+// logSoapy receives and prints Soapy messages to be logged
 func logSoapy(level sdrlogger.SDRLogLevel, message string) {
 	levelStr := "Unknown"
 	switch level {
