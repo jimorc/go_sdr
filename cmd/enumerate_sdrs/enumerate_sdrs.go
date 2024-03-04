@@ -90,6 +90,10 @@ func displayDetails(dev *device.SDRDevice) {
 
 	// Clocking
 	displayMasterClockRate(dev)
+	displayClockSources(dev)
+
+	// Registers
+	displayRegisters(dev)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -182,6 +186,30 @@ func displayMasterClockRate(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("Clock Rate Ranges: [none]")
+	}
+}
+
+func displayClockSources(dev *device.SDRDevice) {
+	clockSources := dev.ListClockSources()
+	if len(clockSources) > 0 {
+		fmt.Println("Clock Sources:")
+		for i, clockSource := range clockSources {
+			fmt.Printf("  Clock Source#%d: %v\n", i, clockSource)
+		}
+	} else {
+		fmt.Println("Clock Sources: [none]")
+	}
+}
+
+func displayRegisters(dev *device.SDRDevice) {
+	registers := dev.ListRegisterInterfaces()
+	if len(registers) > 0 {
+		fmt.Println("Registers:")
+		for i, register := range registers {
+			fmt.Printf("  Register#%d: %v\n", i, register)
+		}
+	} else {
+		fmt.Println("Registers: [none]")
 	}
 }
 
