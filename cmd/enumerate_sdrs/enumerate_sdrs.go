@@ -76,18 +76,8 @@ func displayDetails(dev *device.SDRDevice) {
 	fmt.Printf("Device Information\n")
 	fmt.Printf("***************\n")
 
-	// Print keys and info for the device
-	fmt.Printf("DriverKey: %v\n", dev.GetDriverKey())
-	fmt.Printf("HardwareKey: %v\n", dev.GetHardwareKey())
-
-	hardwareInfo := dev.GetHardwareInfo()
-	if len(hardwareInfo) > 0 {
-		for k, v := range hardwareInfo {
-			fmt.Printf("HardwareInfo: %v: %v\n", k, v)
-		}
-	} else {
-		fmt.Println("HardwareInfo: [none]")
-	}
+	// Print hardware info for the device
+	displayHardwareInfo(dev)
 
 	// GPIO
 	banks := dev.ListGPIOBanks()
@@ -108,6 +98,20 @@ func displayDetails(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("Settings: [none]")
+	}
+}
+
+// displayHardwareInfo prints hardware info for the specified device
+func displayHardwareInfo(dev *device.SDRDevice) {
+	fmt.Printf("DriverKey: %v\n", dev.GetDriverKey())
+	fmt.Printf("HardwareKey: %v\n", dev.GetHardwareKey())
+	hardwareInfo := dev.GetHardwareInfo()
+	if len(hardwareInfo) > 0 {
+		for k, v := range hardwareInfo {
+			fmt.Printf("HardwareInfo: %v: %v\n", k, v)
+		}
+	} else {
+		fmt.Println("HardwareInfo: [none]")
 	}
 }
 
