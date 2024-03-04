@@ -76,9 +76,9 @@ func displayDetails(dev *device.SDRDevice) {
 	fmt.Printf("Device Information\n")
 	fmt.Printf("***************\n")
 
-	// Print driver key for device
+	// Print keys and info for the device
 	fmt.Printf("DriverKey: %v\n", dev.GetDriverKey())
-
+	fmt.Printf("HardwareKey: %v\n", dev.GetHardwareKey())
 }
 
 // logSoapy is a function that is used to receive Soapy messages to be logged
