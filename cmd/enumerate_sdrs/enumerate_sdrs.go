@@ -61,6 +61,13 @@ func main() {
 
 		displayDetails(dev)
 	}
+
+	// Close all devices
+	err = device.UnmakeList(devs)
+	if err != nil {
+		log.Panic(err)
+	}
+	sdrlogger.Log(sdrlogger.Trace, "All devices closed")
 }
 
 // displayDetails displays the details and information for a device (for all its directions and channels)
