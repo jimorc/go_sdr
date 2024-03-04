@@ -83,15 +83,10 @@ func displayDetails(dev *device.SDRDevice) {
 	displayGPIOBanks(dev)
 
 	// Settings
-	settings := dev.GetSettingInfo()
-	if len(settings) > 0 {
-		for i, setting := range settings {
-			fmt.Printf("Setting#%d:\n", i)
-			displaySettingValues(setting)
-		}
-	} else {
-		fmt.Println("Settings: [none]")
-	}
+	displaySettingInfo(dev)
+
+	// UARTs
+	displayUARTs(dev)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -117,6 +112,19 @@ func displayGPIOBanks(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("GPIO Banks: [none]")
+	}
+}
+
+// displaySettingInfo prints a device's setting information
+func displaySettingInfo(dev *device.SDRDevice) {
+	settings := dev.GetSettingInfo()
+	if len(settings) > 0 {
+		for i, setting := range settings {
+			fmt.Printf("Setting#%d:\n", i)
+			displaySettingValues(setting)
+		}
+	} else {
+		fmt.Println("Settings: [none]")
 	}
 }
 
@@ -147,6 +155,17 @@ func displaySettingValues(setting device.SDRArgInfo) {
 	} else {
 		fmt.Println("  options: [none]")
 		fmt.Println("  option names: [none]")
+	}
+}
+
+func displayUARTs(dev *device.SDRDevice) {
+	uarts := dev.ListUARTs()
+	if len(uarts) > 0 {
+		for i, uart := range uarts {
+			fmt.Printf("UARTs#%d:%v\n", i, uart)
+		}
+	} else {
+		fmt.Println("UARTs: [none]")
 	}
 }
 
