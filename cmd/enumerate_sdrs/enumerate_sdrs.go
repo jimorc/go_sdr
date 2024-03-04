@@ -97,6 +97,9 @@ func displayDetails(dev *device.SDRDevice) {
 
 	// Device Sensor
 	displaySensors(dev)
+
+	// Time Sources
+	displayTimeSources(dev)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -168,6 +171,7 @@ func displaySettingValues(setting device.SDRArgInfo) {
 	}
 }
 
+// displayUARTs prints a devices's UARTs
 func displayUARTs(dev *device.SDRDevice) {
 	uarts := dev.ListUARTs()
 	if len(uarts) > 0 {
@@ -179,6 +183,7 @@ func displayUARTs(dev *device.SDRDevice) {
 	}
 }
 
+// displayMasterClockRate prints a device's master clock rate and clock ranges
 func displayMasterClockRate(dev *device.SDRDevice) {
 	fmt.Printf("Master Clock Rate: %v\n", dev.GetMasterClockRate())
 	clockRanges := dev.GetMasterClockRates()
@@ -192,6 +197,7 @@ func displayMasterClockRate(dev *device.SDRDevice) {
 	}
 }
 
+// displayClockSources prints a device's clock sources
 func displayClockSources(dev *device.SDRDevice) {
 	clockSources := dev.ListClockSources()
 	if len(clockSources) > 0 {
@@ -204,6 +210,7 @@ func displayClockSources(dev *device.SDRDevice) {
 	}
 }
 
+// displayRegisters prints a device's registers
 func displayRegisters(dev *device.SDRDevice) {
 	registers := dev.ListRegisterInterfaces()
 	if len(registers) > 0 {
@@ -216,6 +223,7 @@ func displayRegisters(dev *device.SDRDevice) {
 	}
 }
 
+// displaySensors prints a device's sensors
 func displaySensors(dev *device.SDRDevice) {
 	sensors := dev.ListSensors()
 	if len(sensors) > 0 {
@@ -225,6 +233,19 @@ func displaySensors(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("Sensors: [none]")
+	}
+}
+
+// displayTimeSources lists all of a device's time sources.
+func displayTimeSources(dev *device.SDRDevice) {
+	timeSources := dev.ListTimeSources()
+	if len(timeSources) > 0 {
+		fmt.Println("Time Sources:")
+		for i, timeSource := range timeSources {
+			fmt.Printf("  Time Source#%d: %v\n", i, timeSource)
+		}
+	} else {
+		fmt.Println("Time Sources: [none]")
 	}
 }
 
