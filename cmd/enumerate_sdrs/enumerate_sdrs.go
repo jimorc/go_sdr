@@ -87,6 +87,9 @@ func displayDetails(dev *device.SDRDevice) {
 
 	// UARTs
 	displayUARTs(dev)
+
+	// Clocking
+	displayMasterClockRate(dev)
 }
 
 // displayHardwareInfo prints hardware info for the specified device
@@ -166,6 +169,19 @@ func displayUARTs(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("UARTs: [none]")
+	}
+}
+
+func displayMasterClockRate(dev *device.SDRDevice) {
+	fmt.Printf("Master Clock Rate: %v\n", dev.GetMasterClockRate())
+	clockRanges := dev.GetMasterClockRates()
+	if len(clockRanges) > 0 {
+		fmt.Println("Master Clock Rate Ranges:")
+		for i, clockRange := range clockRanges {
+			fmt.Printf("  Range#%d: %v\n", i, clockRange)
+		}
+	} else {
+		fmt.Println("Clock Rate Ranges: [none]")
 	}
 }
 
