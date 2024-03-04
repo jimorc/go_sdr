@@ -80,14 +80,7 @@ func displayDetails(dev *device.SDRDevice) {
 	displayHardwareInfo(dev)
 
 	// GPIO
-	banks := dev.ListGPIOBanks()
-	if len(banks) > 0 {
-		for i, bank := range banks {
-			fmt.Printf("GPIO Bank#%d: %v\n", i, bank)
-		}
-	} else {
-		fmt.Println("GPIO Banks: [none]")
-	}
+	displayGPIOBanks(dev)
 
 	// Settings
 	settings := dev.GetSettingInfo()
@@ -112,6 +105,18 @@ func displayHardwareInfo(dev *device.SDRDevice) {
 		}
 	} else {
 		fmt.Println("HardwareInfo: [none]")
+	}
+}
+
+// displayGPIOBanks prints GPIO bank info for the specified device
+func displayGPIOBanks(dev *device.SDRDevice) {
+	banks := dev.ListGPIOBanks()
+	if len(banks) > 0 {
+		for i, bank := range banks {
+			fmt.Printf("GPIO Bank#%d: %v\n", i, bank)
+		}
+	} else {
+		fmt.Println("GPIO Banks: [none]")
 	}
 }
 
