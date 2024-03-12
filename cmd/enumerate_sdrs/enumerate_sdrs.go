@@ -276,6 +276,37 @@ func displayDirectionDetails(dev *device.SDRDevice, direction device.Direction) 
 
 	numChannels := dev.GetNumChannels(direction)
 	fmt.Printf("  Number of Channels: %v\n", numChannels)
+
+	for channel := uint(0); channel < numChannels; channel++ {
+		displayDirectionChannelDetails(dev, direction, channel)
+	}
+}
+
+// displayDirectionChannelDetails prints out details and info of a device / direction / channel
+func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Direction, channel uint) {
+	// Settings
+	// This is commented out because the call to GetChannelSettingInfo causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	/*	settings := dev.GetChannelSettingInfo(direction, channel)
+		if len(settings) > 0 {
+			for i, setting := range settings {
+				fmt.Printf("Channel#%d Setting#%d Banks: %v\n", channel, i, setting)
+			}
+		} else {
+			fmt.Printf("Channel#%d Settings: [none]\n", channel)
+		}*/
+
+	// Channel
+	channelInfo := dev.GetChannelInfo(direction, channel)
+	if len(channelInfo) > 0 {
+		for k, v := range channelInfo {
+			fmt.Printf("Channel#%d ChannelInfo: {%v: %v}\n", channel, k, v)
+		}
+	} else {
+		fmt.Printf("Channel#%d ChannelInfo: [none]\n", channel)
+	}
+
+	fmt.Printf("Channel#%d Fullduplex: %v\n", channel, dev.GetFullDuplex(direction, channel))
 }
 
 // logSoapy receives and prints Soapy messages to be logged
