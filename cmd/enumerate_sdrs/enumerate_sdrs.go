@@ -359,6 +359,20 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 	for i, frequencyRange := range frequencyRanges {
 		fmt.Printf("Channel#%d Frequency Range#%d: %v\n", channel, i, frequencyRange.ToString())
 	}
+
+	// This is commented out because the call to GetFrequencyArgsInfo causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	/*	   frequencyArgsInfos := dev.GetFrequencyArgsInfo(direction, channel)
+
+	if len(frequencyArgsInfos) > 0 {
+		for i, argInfo := range frequencyArgsInfos {
+			fmt.Printf("Channel#%d Frequency ArgInfo#%d: %v\n", channel, i, argInfo.ToString())
+		}
+	} else {
+
+		//		fmt.Printf("Channel#%d Frequency ArgInfo: [none]\n", channel)
+	}
+	*/
 }
 
 // logSoapy receives and prints Soapy messages to be logged
