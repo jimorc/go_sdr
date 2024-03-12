@@ -398,6 +398,34 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		fmt.Printf("Channel#%d Stream ArgInfo: [none]\n", channel)
 	}
 
+	// Frontend correctiion
+	available := dev.HasDCOffsetMode(direction, channel)
+	fmt.Printf("Channel#%d Stream Correction Auto DC correction available: %v\n", channel, available)
+	if available {
+		offsetMode := dev.GetDCOffsetMode(direction, channel)
+		fmt.Printf("Channel#%d Stream Correction Auto DEC correction: %v\n", channel, offsetMode)
+	}
+
+	available = dev.HasDCOffset(direction, channel)
+	fmt.Printf("Channel#%d Stream Correction DC Correction available: %v\n", channel, available)
+	if available {
+		I, Q, err := dev.GetDCOffset(direction, channel)
+		fmt.Printf("Channel#%d Stream Correction DC correction I: %v, Q: %v, err: %v\n", channel, I, Q, err)
+	}
+
+	available = dev.HasIQBalance(direction, channel)
+	fmt.Printf("Channel#%d Stream Correction IQ Balance available: %v\n", channel, available)
+	if available {
+		I, Q, err := dev.GetIQBalance(direction, channel)
+		fmt.Printf("Channel#%d Stream Correction IQ Balnance I: %v, Q: %v, err: %v\n", channel, I, Q, err)
+	}
+
+	available = dev.HasFrequencyCorrection(direction, channel)
+	fmt.Printf("Channel#%d Stream Correction Frequency correction available: %v\n", channel, available)
+	if available {
+		frequencyCorrection := dev.GetFrequencyCorrection(direction, channel)
+		fmt.Printf("Channel#%d Stream Correction Frequency correction: %v PPM\n", channel, frequencyCorrection)
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
