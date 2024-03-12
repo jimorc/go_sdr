@@ -426,6 +426,16 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		frequencyCorrection := dev.GetFrequencyCorrection(direction, channel)
 		fmt.Printf("Channel#%d Stream Correction Frequency correction: %v PPM\n", channel, frequencyCorrection)
 	}
+
+	// Channel Sensor
+	sensors := dev.ListChannelSensors(direction, channel)
+	if len(sensors) > 0 {
+		for i, sensor := range sensors {
+			fmt.Printf("Channel#%d Sensor#%d: %v\n", channel, i, sensor)
+		}
+	} else {
+		fmt.Printf("Channel#%d Sensors: [none]\n", channel)
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
