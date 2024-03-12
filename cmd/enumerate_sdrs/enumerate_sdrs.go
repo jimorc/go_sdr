@@ -315,6 +315,16 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 	for i, antenna := range antennas {
 		fmt.Printf("Channel#%d Antenna#%d: %v\n", channel, i, antenna)
 	}
+
+	// Bandwidth
+	fmt.Printf("Channel#%d Baseband filter width: %v Hz\n", channel, dev.GetBandwidth(direction, channel))
+
+	// This is commented out because the call to GetBandwidthRanges causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	/*	bandwidthRanges := dev.GetBandwidthRanges(direction, channel)
+		for i, bandwidthRange := range bandwidthRanges {
+			fmt.Printf("Channel#%d Baseband filter#%d: %v\n", channel, i, bandwidthRange)
+		}*/
 }
 
 // logSoapy receives and prints Soapy messages to be logged
