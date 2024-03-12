@@ -346,9 +346,18 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 
 	// SampleRate
 	fmt.Printf("Channel#%d Sample Rate: %v\n", channel, dev.GetSampleRate(direction, channel))
-	sampleRateRanges := make([]device.SDRRange, 2) //dev.GetSampleRateRange(direction, channel)
+	// This is commented out because the call to GetSampleRateRange causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	/*sampleRateRanges := dev.GetSampleRateRange(direction, channel)
 	for i, sampleRateRange := range sampleRateRanges {
 		fmt.Printf("Channel#%d Sample Rate Range#%d: %v\n", channel, i, sampleRateRange.ToString())
+	}*/
+
+	// Frequencies
+	fmt.Printf("Channel#%d Frequency: %v\n", channel, dev.GetFrequency(direction, channel))
+	frequencyRanges := dev.GetFrequencyRange(direction, channel)
+	for i, frequencyRange := range frequencyRanges {
+		fmt.Printf("Channel#%d Frequency Range#%d: %v\n", channel, i, frequencyRange.ToString())
 	}
 }
 
