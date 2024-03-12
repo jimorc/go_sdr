@@ -307,6 +307,14 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 	}
 
 	fmt.Printf("Channel#%d Fullduplex: %v\n", channel, dev.GetFullDuplex(direction, channel))
+
+	// Antenna
+	antennas := dev.ListAntennas(direction, channel)
+	fmt.Printf("Channel#%d NumAntennas: %v\n", channel, len(antennas))
+
+	for i, antenna := range antennas {
+		fmt.Printf("Channel#%d Antenna#%d: %v\n", channel, i, antenna)
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
