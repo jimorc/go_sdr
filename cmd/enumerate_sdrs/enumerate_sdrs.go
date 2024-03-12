@@ -325,6 +325,31 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		for i, bandwidthRange := range bandwidthRanges {
 			fmt.Printf("Channel#%d Baseband filter#%d: %v\n", channel, i, bandwidthRange)
 		}*/
+
+	// Gain
+	fmt.Printf("Channel#%d HasGainMode (Automatic gain possible): %v\n", channel, dev.HasGainMode(direction, channel))
+	fmt.Printf("Channel#%d GainMode (Automatic gain enabled): %v\n", channel, dev.GetGainMode(direction, channel))
+	// This is commented out because the call to GetGain causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	// fmt.Printf("Channel#%d Gain: %v\n", channel, dev.GetGain(direction, channel))
+	// This is commented out because the call to GetGainRange causes a double free error on MacOS.
+	// See https://github.com/pothosware/go-soapy-sdr/issues/4
+	// fmt.Printf("Channel#%d GainRange: %v\n", channel, dev.GetGainRange(direction, channel))
+	/*	gainElements := dev.ListGains(direction, channel)
+		fmt.Printf("Channel#%d NumGainElements: %v\n", channel, len(gainElements))
+
+		for i, gainElement := range gainElements {
+			fmt.Printf("Channel#%d Gain Element#%d Name: %v\n", channel, i, gainElement)
+			fmt.Printf("Channel#%d Gain Element#%d Value: %v\n", channel, i, dev.GetGainElement(direction, channel, gainElement))
+			fmt.Printf("Channel#%d Gain Element#%d Range: %v\n", channel, i, dev.GetGainElementRange(direction, channel, gainElement).ToString())
+		}*/
+
+	// SampleRate
+	fmt.Printf("Channel#%d Sample Rate: %v\n", channel, dev.GetSampleRate(direction, channel))
+	sampleRateRanges := make([]device.SDRRange, 2) //dev.GetSampleRateRange(direction, channel)
+	for i, sampleRateRange := range sampleRateRanges {
+		fmt.Printf("Channel#%d Sample Rate Range#%d: %v\n", channel, i, sampleRateRange.ToString())
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
