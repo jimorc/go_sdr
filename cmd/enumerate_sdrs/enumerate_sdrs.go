@@ -373,6 +373,14 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		//		fmt.Printf("Channel#%d Frequency ArgInfo: [none]\n", channel)
 	}
 	*/
+
+	frequencyComponents := dev.ListFrequencies(direction, channel)
+	fmt.Printf("Channel#%d NumFrequencyComponents: %v\n", channel, len(frequencyComponents))
+
+	for i, frequencyComponent := range frequencyComponents {
+		fmt.Printf("Channel#%d Frequency Component#%d Name: %v\n", channel, i, frequencyComponent)
+		fmt.Printf("Channel#%d Frequency Component#%d Frequency: %v\n", channel, i, dev.GetFrequencyComponent(direction, channel, frequencyComponent))
+	}
 }
 
 // logSoapy receives and prints Soapy messages to be logged
