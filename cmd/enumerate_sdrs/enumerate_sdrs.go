@@ -381,6 +381,23 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		fmt.Printf("Channel#%d Frequency Component#%d Name: %v\n", channel, i, frequencyComponent)
 		fmt.Printf("Channel#%d Frequency Component#%d Frequency: %v\n", channel, i, dev.GetFrequencyComponent(direction, channel, frequencyComponent))
 	}
+
+	// Stream
+	streamFormats := dev.GetStreamFormats(direction, channel)
+	fmt.Printf("Channel#%d Stream Formats: %v\n", channel, streamFormats)
+	nativeStreamFormat, nativeStreamFullScale := dev.GetNativeStreamFormat(direction, channel)
+	fmt.Printf("Channel#%d Stream Native Format: %v\n", channel, nativeStreamFormat)
+	fmt.Printf("Channel#%d Stream Native FullScale: %v\n", channel, nativeStreamFullScale)
+
+	streamArgsInfos := dev.GetStreamArgsInfo(direction, channel)
+	if len(streamArgsInfos) > 0 {
+		for i, argInfo := range streamArgsInfos {
+			fmt.Printf("Channel#%d Stream ArgInfo#%d: %v\n", channel, i, argInfo.ToString())
+		}
+	} else {
+		fmt.Printf("Channel#%d Stream ArgInfo: [none]\n", channel)
+	}
+
 }
 
 // logSoapy receives and prints Soapy messages to be logged
