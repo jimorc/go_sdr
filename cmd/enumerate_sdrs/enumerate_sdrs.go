@@ -510,7 +510,11 @@ func buildStreamFlagsString(flag int) string {
 	addFlagStringToStringBuilder(flag, "OnePacket", device.StreamFlagOnePacket, &haveFlag, &flagStringBuilder)
 	addFlagStringToStringBuilder(flag, "MoreFragments", device.StreamFlagMoreFragments, &haveFlag, &flagStringBuilder)
 	addFlagStringToStringBuilder(flag, "WaitTrigger", device.StreamFlagWaitTrigger, &haveFlag, &flagStringBuilder)
-	return flagStringBuilder.String()
+	if flagStringBuilder.Len() > 0 {
+		return flagStringBuilder.String()
+	} else {
+		return "[none]"
+	}
 }
 
 // addFlagStringToStringBuilder adds stream flag name to string.Builder if flag is set.
