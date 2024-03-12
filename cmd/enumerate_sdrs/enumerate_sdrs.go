@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
@@ -60,6 +61,7 @@ func main() {
 		fmt.Printf("***************\n")
 
 		displayDetails(dev)
+		receiveSomeData(dev)
 	}
 
 	// Close all devices
@@ -435,6 +437,91 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		}
 	} else {
 		fmt.Printf("Channel#%d Sensors: [none]\n", channel)
+	}
+}
+
+// receiveSomeData receives CS8 data from stream 0
+func receiveSomeData(dev *device.SDRDevice) {
+	fmt.Println("\n---------------")
+	fmt.Println("Data Reception")
+	fmt.Println("---------------")
+
+	// Apply settings
+	if err := dev.SetSampleRate(device.DirectionRX, 0, 1e6); err != nil {
+		log.Fatal(fmt.Printf("SetSampleRate fail: error: %v\n", err))
+	}
+	if err := dev.SetFrequency(device.DirectionRX, 0, 99.9e6, nil); err != nil {
+		log.Fatal(fmt.Printf("SetFrequency fail: error: %v\n", err))
+	}
+
+	stream, err := dev.SetupSDRStreamCS8(device.DirectionRX, []uint{0}, nil)
+
+	if err != nil {
+		log.Fatal(fmt.Printf("SetupStream fail: error: %v\n", err))
+	}
+
+	if err := stream.Activate(0, 0, 0); err != nil {
+		log.Fatal(fmt.Printf("Stream Activate fail: error: %v\n", err))
+	}
+
+	mtu := stream.GetMTU()
+	fmt.Printf("Stream MTU: %v\n", mtu)
+	numBuffers := stream.GetNumDirectAccessBuffers()
+	fmt.Printf("NumDirectAccessBuffers: %v\n", numBuffers)
+
+	buffers := make([][]int8, 1)
+	buffers[0] = make([]int8, 1024)
+	flags := make([]int, 1)
+
+	for i := 0; i < 10; i++ {
+		timeNs, numElementsRead, err := stream.Read(buffers, 511, flags, 1000000)
+		fmt.Printf("flags=")
+		var flag int = flags[0]
+		streamFlags := buildFlagString(flag)
+		fmt.Printf("flags=%v\n", streamFlags)
+		fmt.Printf("numElemsRead=%v, timeNS=%v, err=%v\n", numElementsRead, timeNs, err)
+		if err == nil {
+			for j := uint(0); j < numElementsRead; j++ {
+				fmt.Printf("{%v, %v} ", buffers[0][int(2*j)], buffers[0][2*j+1])
+				if (j+1)%8 == 0 {
+					fmt.Println("")
+				}
+			}
+			fmt.Println("")
+		}
+	}
+
+	if err := stream.Deactivate(0, 1000000); err != nil {
+		log.Fatal(fmt.Printf("Stream Deactivate fail: error: %v\n", err))
+	}
+
+	if err := stream.Close(); err != nil {
+		log.Fatal(fmt.Printf("Stream close fail: error: %v\n", err))
+	}
+}
+
+func buildFlagString(flag int) string {
+	var haveFlag = false
+	var flagStringBuilder strings.Builder
+	buildFlagStringBuffer(flag, "EndBurst", device.StreamFlagEndBurst, &haveFlag, &flagStringBuilder)
+	buildFlagStringBuffer(flag, "HasTime", device.StreamFlagHasTime, &haveFlag, &flagStringBuilder)
+	buildFlagStringBuffer(flag, "EndAbrupt", device.StreamFlagEndAbrupt, &haveFlag, &flagStringBuilder)
+	buildFlagStringBuffer(flag, "OnePacket", device.StreamFlagOnePacket, &haveFlag, &flagStringBuilder)
+	buildFlagStringBuffer(flag, "MoreFragments", device.StreamFlagMoreFragments, &haveFlag, &flagStringBuilder)
+	buildFlagStringBuffer(flag, "WaitTrigger", device.StreamFlagWaitTrigger, &haveFlag, &flagStringBuilder)
+	return flagStringBuilder.String()
+}
+
+func buildFlagStringBuffer(flag int, flagName string, testFlag device.StreamFlag, haveFlags *bool, flagString *strings.Builder) {
+	if flag&int(testFlag) == int(testFlag) {
+		if *haveFlags {
+			flagString.WriteString(", ")
+		}
+		*haveFlags = true
+		flagString.WriteString(flagName)
+	}
+	{
+
 	}
 }
 
