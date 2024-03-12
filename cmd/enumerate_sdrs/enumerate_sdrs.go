@@ -477,7 +477,7 @@ func receiveSomeData(dev *device.SDRDevice) {
 		timeNs, numElementsRead, err := stream.Read(buffers, 511, flags, 1000000)
 		fmt.Printf("flags=")
 		var flag int = flags[0]
-		streamFlags := buildFlagString(flag)
+		streamFlags := buildStreamFlagsString(flag)
 		fmt.Printf("flags=%v\n", streamFlags)
 		fmt.Printf("numElemsRead=%v, timeNS=%v, err=%v\n", numElementsRead, timeNs, err)
 		if err == nil {
@@ -500,28 +500,27 @@ func receiveSomeData(dev *device.SDRDevice) {
 	}
 }
 
-func buildFlagString(flag int) string {
+// buildStreamFlagsString builds a string of stream flag names.
+func buildStreamFlagsString(flag int) string {
 	var haveFlag = false
 	var flagStringBuilder strings.Builder
-	buildFlagStringBuffer(flag, "EndBurst", device.StreamFlagEndBurst, &haveFlag, &flagStringBuilder)
-	buildFlagStringBuffer(flag, "HasTime", device.StreamFlagHasTime, &haveFlag, &flagStringBuilder)
-	buildFlagStringBuffer(flag, "EndAbrupt", device.StreamFlagEndAbrupt, &haveFlag, &flagStringBuilder)
-	buildFlagStringBuffer(flag, "OnePacket", device.StreamFlagOnePacket, &haveFlag, &flagStringBuilder)
-	buildFlagStringBuffer(flag, "MoreFragments", device.StreamFlagMoreFragments, &haveFlag, &flagStringBuilder)
-	buildFlagStringBuffer(flag, "WaitTrigger", device.StreamFlagWaitTrigger, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "EndBurst", device.StreamFlagEndBurst, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "HasTime", device.StreamFlagHasTime, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "EndAbrupt", device.StreamFlagEndAbrupt, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "OnePacket", device.StreamFlagOnePacket, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "MoreFragments", device.StreamFlagMoreFragments, &haveFlag, &flagStringBuilder)
+	addFlagStringToStringBuilder(flag, "WaitTrigger", device.StreamFlagWaitTrigger, &haveFlag, &flagStringBuilder)
 	return flagStringBuilder.String()
 }
 
-func buildFlagStringBuffer(flag int, flagName string, testFlag device.StreamFlag, haveFlags *bool, flagString *strings.Builder) {
+// addFlagStringToStringBuilder adds stream flag name to string.Builder if flag is set.
+func addFlagStringToStringBuilder(flag int, flagName string, testFlag device.StreamFlag, haveFlags *bool, flagString *strings.Builder) {
 	if flag&int(testFlag) == int(testFlag) {
 		if *haveFlags {
 			flagString.WriteString(", ")
 		}
 		*haveFlags = true
 		flagString.WriteString(flagName)
-	}
-	{
-
 	}
 }
 
