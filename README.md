@@ -30,10 +30,19 @@ Prior to downloading this project from GitHub, you will need the following softw
 - The latest version of [Go](https://go.dev/doc/install)
 - The latest version of [VSCode](https://code.visualstudio.com/Download)
 - The VSCode Go extension
-- SoapySDR and related libraries. Install SoapySDR libraries using Homebrew:
+- SoapySDR and related libraries. Install SoapySDR libraries using Homebrew. Install ony the libraries for the SDRs that you have:
     ```
-    brew install soapysdr
     brew install soapyrtlsdr
+    brew install soapyhackrf
+    brew install soapyplutosdr
+    brew install soapysdrplay3
+    brew install soapysidekiq
+    brew install soapyfcdpp
+    brew install soapyairspyhf
+    brew install soapyairspy
+    brew install soapybladerf
+    brew install soapyosmo
+
     ```
 
 #### Building for Apple Silicon
@@ -83,7 +92,30 @@ including the terminal in VSCode.
 
 The following are incomplete instructions.
 
-- SoapySDR and related libraries. Install the following:
-    - apt install libsoapysdr0.8 libsoapysdr-doc libsoapysdr-dev
-    - apt install librtlsdr0
+- Install prerequisites
+```
+sudo apt update
+sudo apt install build-essential
+  ```
+  - Install go using ONE of these two methods:
+    1. Via snap:
+    ```
+sudo snap install --classic go
+go version # to ensure it is installed 
+    ```
+
+    2. Follow the [Linux installation instructions](https://go.dev/doc/install) provided by Go.
+
+- Install SoapySDR and related libraries:
+```
+sudo apt install libsoapysdr0.8 libsoapysdr-doc libsoapysdr-dev
+```
+
+- I use VSCode and some VSCode-related files are included in the go_sdr repository, so you may
+wish to also install VSCode, but that is up to you:
+```
+sudo snap install --classic code
+```
+Install the `Go` and possibly the `Go Test Explorer` extensions.
+
  
