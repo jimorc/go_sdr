@@ -35,7 +35,6 @@ func main() {
 		}
 		fmt.Printf("\n")
 	}
-
 	if len(devices) == 0 {
 		fmt.Printf("No devices found!!\n")
 		return
@@ -43,9 +42,10 @@ func main() {
 
 	// Convert device info arguments for opening all detected devices
 	deviceArgs := make([]map[string]string, len(devices))
+
 	for i, dev := range devices {
 		deviceArgs[i] = map[string]string{
-			"label": dev["label"],
+			"driver": dev["driver"],
 		}
 	}
 
@@ -54,6 +54,14 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+	defer func([]*device.SDRDevice) {
+		// Close all devices
+		err := device.UnmakeList(devs)
+		if err != nil {
+			log.Panic(err)
+		}
+		sdrlogger.Log(sdrlogger.Trace, "All devices closed")
+	}(devs)
 
 	for i, dev := range devs {
 		fmt.Printf("***************\n")
@@ -65,11 +73,12 @@ func main() {
 	}
 
 	// Close all devices
-	err = device.UnmakeList(devs)
-	if err != nil {
-		log.Panic(err)
-	}
-	sdrlogger.Log(sdrlogger.Trace, "All devices closed")
+	/*	err = device.UnmakeList(devs)
+		if err != nil {
+			log.Panic(err)
+		}*/
+
+	//sdrlogger.Log(sdrlogger.Trace, "All devices closed")
 }
 
 // displayDetails displays the details and information for a device (for all its directions and channels)
@@ -287,16 +296,14 @@ func displayDirectionDetails(dev *device.SDRDevice, direction device.Direction) 
 // displayDirectionChannelDetails prints out details and info of a device / direction / channel
 func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Direction, channel uint) {
 	// Settings
-	// This is commented out because the call to GetChannelSettingInfo causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	/*	settings := dev.GetChannelSettingInfo(direction, channel)
-		if len(settings) > 0 {
-			for i, setting := range settings {
-				fmt.Printf("Channel#%d Setting#%d Banks: %v\n", channel, i, setting)
-			}
-		} else {
-			fmt.Printf("Channel#%d Settings: [none]\n", channel)
-		}*/
+	settings := dev.GetChannelSettingInfo(direction, channel)
+	if len(settings) > 0 {
+		for i, setting := range settings {
+			fmt.Printf("Channel#%d Setting#%d Banks: %v\n", channel, i, setting)
+		}
+	} else {
+		fmt.Printf("Channel#%d Settings: [none]\n", channel)
+	}
 
 	// Channel
 	channelInfo := dev.GetChannelInfo(direction, channel)
@@ -321,39 +328,31 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 	// Bandwidth
 	fmt.Printf("Channel#%d Baseband filter width: %v Hz\n", channel, dev.GetBandwidth(direction, channel))
 
-	// This is commented out because the call to GetBandwidthRanges causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	/*	bandwidthRanges := dev.GetBandwidthRanges(direction, channel)
-		for i, bandwidthRange := range bandwidthRanges {
-			fmt.Printf("Channel#%d Baseband filter#%d: %v\n", channel, i, bandwidthRange)
-		}*/
+	bandwidthRanges := dev.GetBandwidthRanges(direction, channel)
+	for i, bandwidthRange := range bandwidthRanges {
+		fmt.Printf("Channel#%d Baseband filter#%d: %v\n", channel, i, bandwidthRange)
+	}
 
 	// Gain
 	fmt.Printf("Channel#%d HasGainMode (Automatic gain possible): %v\n", channel, dev.HasGainMode(direction, channel))
 	fmt.Printf("Channel#%d GainMode (Automatic gain enabled): %v\n", channel, dev.GetGainMode(direction, channel))
-	// This is commented out because the call to GetGain causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	// fmt.Printf("Channel#%d Gain: %v\n", channel, dev.GetGain(direction, channel))
-	// This is commented out because the call to GetGainRange causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	// fmt.Printf("Channel#%d GainRange: %v\n", channel, dev.GetGainRange(direction, channel))
-	/*	gainElements := dev.ListGains(direction, channel)
-		fmt.Printf("Channel#%d NumGainElements: %v\n", channel, len(gainElements))
+	fmt.Printf("Channel#%d Gain: %v\n", channel, dev.GetGain(direction, channel))
+	fmt.Printf("Channel#%d GainRange: %v\n", channel, dev.GetGainRange(direction, channel))
+	gainElements := dev.ListGains(direction, channel)
+	fmt.Printf("Channel#%d NumGainElements: %v\n", channel, len(gainElements))
 
-		for i, gainElement := range gainElements {
-			fmt.Printf("Channel#%d Gain Element#%d Name: %v\n", channel, i, gainElement)
-			fmt.Printf("Channel#%d Gain Element#%d Value: %v\n", channel, i, dev.GetGainElement(direction, channel, gainElement))
-			fmt.Printf("Channel#%d Gain Element#%d Range: %v\n", channel, i, dev.GetGainElementRange(direction, channel, gainElement).ToString())
-		}*/
+	for i, gainElement := range gainElements {
+		fmt.Printf("Channel#%d Gain Element#%d Name: %v\n", channel, i, gainElement)
+		fmt.Printf("Channel#%d Gain Element#%d Value: %v\n", channel, i, dev.GetGainElement(direction, channel, gainElement))
+		fmt.Printf("Channel#%d Gain Element#%d Range: %v\n", channel, i, dev.GetGainElementRange(direction, channel, gainElement).ToString())
+	}
 
 	// SampleRate
 	fmt.Printf("Channel#%d Sample Rate: %v\n", channel, dev.GetSampleRate(direction, channel))
-	// This is commented out because the call to GetSampleRateRange causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	/*sampleRateRanges := dev.GetSampleRateRange(direction, channel)
+	sampleRateRanges := dev.GetSampleRateRange(direction, channel)
 	for i, sampleRateRange := range sampleRateRanges {
 		fmt.Printf("Channel#%d Sample Rate Range#%d: %v\n", channel, i, sampleRateRange.ToString())
-	}*/
+	}
 
 	// Frequencies
 	fmt.Printf("Channel#%d Frequency: %v\n", channel, dev.GetFrequency(direction, channel))
@@ -362,19 +361,15 @@ func displayDirectionChannelDetails(dev *device.SDRDevice, direction device.Dire
 		fmt.Printf("Channel#%d Frequency Range#%d: %v\n", channel, i, frequencyRange.ToString())
 	}
 
-	// This is commented out because the call to GetFrequencyArgsInfo causes a double free error on MacOS.
-	// See https://github.com/pothosware/go-soapy-sdr/issues/4
-	/*	   frequencyArgsInfos := dev.GetFrequencyArgsInfo(direction, channel)
+	frequencyArgsInfos := dev.GetFrequencyArgsInfo(direction, channel)
 
 	if len(frequencyArgsInfos) > 0 {
 		for i, argInfo := range frequencyArgsInfos {
 			fmt.Printf("Channel#%d Frequency ArgInfo#%d: %v\n", channel, i, argInfo.ToString())
 		}
 	} else {
-
-		//		fmt.Printf("Channel#%d Frequency ArgInfo: [none]\n", channel)
+		fmt.Printf("Channel#%d Frequency ArgInfo: [none]\n", channel)
 	}
-	*/
 
 	frequencyComponents := dev.ListFrequencies(direction, channel)
 	fmt.Printf("Channel#%d NumFrequencyComponents: %v\n", channel, len(frequencyComponents))
