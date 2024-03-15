@@ -12,6 +12,10 @@ This project is in its very initial stage and there is little that is usable at 
 
 ## Building go_sdr
 
+**Note:** This project uses the go-soapy-sdr module. There is a bug in the call to `device.UnmakeList` that causes a double free
+error. See [go-soapy-sdr issue #4](https://github.com/pothosware/go-soapy-sdr/issues/4) for more information. Until that bug is
+fixed, the programs will abort on cleanup.
+
 All development at the moment is being done on an M1 Pro Macbook Pro running MacOS 14, so the only instructions provided 
 below are for that system. I spent a limited amount of time setting it up on Kubuntu 22.04 and incomplete instructions for that
 system are also provided below. If a workable SDR receiver is developed on MacOS, I intend to port to both Linux and Windows, 
@@ -30,7 +34,7 @@ Prior to downloading this project from GitHub, you will need the following softw
 - The latest version of [Go](https://go.dev/doc/install)
 - The latest version of [VSCode](https://code.visualstudio.com/Download)
 - The VSCode Go extension
-- SoapySDR and related libraries. Install SoapySDR libraries using Homebrew. Install ony the libraries for the SDRs that you have:
+- SoapySDR and related libraries. Install SoapySDR libraries using Homebrew. Install only the libraries for the SDRs that you have:
     ```
     brew install soapyrtlsdr
     brew install soapyhackrf
@@ -44,6 +48,8 @@ Prior to downloading this project from GitHub, you will need the following softw
     brew install soapyosmo
 
     ```
+
+    I am only able to test RTL-SDR v3 and v4 dongles, so your help with others is appreciated.
 
 #### Building for Apple Silicon
 
