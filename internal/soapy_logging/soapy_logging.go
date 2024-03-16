@@ -10,7 +10,6 @@ import (
 
 var soapyLogfileName string
 
-// CreateSDRLogfileName sets the name of the sdr logging file and either creates or truncates the file
 func CreateSoapyLogfileName(name string) {
 	soapyLogfileName = name
 	logFile, err := os.Create(soapyLogfileName)
