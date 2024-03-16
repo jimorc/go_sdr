@@ -3,28 +3,19 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"strings"
+
+	"internal/soapy_logging"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
-var sdrLogfileName string
-
 func main() {
-	sdrLogfileName = "enumerate_sdrs.log"
-	logFile, err := os.Create(sdrLogfileName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = logFile.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
+	soapy_logging.CreateSoapyLogfileName("enumerate_sdrs.log")
 
 	// Test log levels
-	sdrlogger.RegisterLogHandler(logSoapy)
+	sdrlogger.RegisterLogHandler(soapy_logging.LogSoapy)
 	sdrlogger.SetLogLevel(sdrlogger.SSI)
 	sdrlogger.Log(sdrlogger.Info, "Soapy SDR")
 	sdrlogger.Logf(sdrlogger.Info, "%v\n", "Demonstration")
@@ -531,40 +522,5 @@ func addFlagStringToStringBuilder(flag int, flagName string, testFlag device.Str
 		}
 		*haveFlags = true
 		flagString.WriteString(flagName)
-	}
-}
-
-// logSoapy receives and prints Soapy messages to be logged
-func logSoapy(level sdrlogger.SDRLogLevel, message string) {
-	levelStr := "Unknown"
-	switch level {
-	case sdrlogger.Fatal:
-		levelStr = "Fatal"
-	case sdrlogger.Critical:
-		levelStr = "Critical"
-	case sdrlogger.Error:
-		levelStr = "Error"
-	case sdrlogger.Warning:
-		levelStr = "Warning"
-	case sdrlogger.Notice:
-		levelStr = "Notice"
-	case sdrlogger.Info:
-		levelStr = "Info"
-	case sdrlogger.Debug:
-		levelStr = "Debug"
-	case sdrlogger.Trace:
-		levelStr = "Trace"
-	case sdrlogger.SSI:
-		levelStr = "SSI"
-	}
-	logFile, err := os.OpenFile(sdrLogfileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer logFile.Close()
-
-	_, err = logFile.WriteString(fmt.Sprintf("Soapy Logged: [%v] %v\n", levelStr, message))
-	if err != nil {
-		log.Panic(err)
 	}
 }
