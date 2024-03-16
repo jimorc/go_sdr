@@ -10,8 +10,11 @@ import (
 	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
 )
 
+var sdrLogfileName string
+
 func main() {
-	logFile, err := os.Create("enumerate_sdrs.log")
+	sdrLogfileName = "enumerate_sdrs.log"
+	logFile, err := os.Create(sdrLogfileName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -554,7 +557,7 @@ func logSoapy(level sdrlogger.SDRLogLevel, message string) {
 	case sdrlogger.SSI:
 		levelStr = "SSI"
 	}
-	logFile, err := os.OpenFile("enumerate_sdrs.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+	logFile, err := os.OpenFile(sdrLogfileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
