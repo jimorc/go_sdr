@@ -19,3 +19,7 @@
 
 # Go workspace file
 go.work
+
+# Logging files
+enumerate_sdrs.log
+go_sdr.log

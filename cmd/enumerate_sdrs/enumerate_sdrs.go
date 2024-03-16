@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/pothosware/go-soapy-sdr/pkg/device"
@@ -10,6 +11,15 @@ import (
 )
 
 func main() {
+	logFile, err := os.Create("enumerate_sdrs.log")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = logFile.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Test log levels
 	sdrlogger.RegisterLogHandler(logSoapy)
 	sdrlogger.SetLogLevel(sdrlogger.SSI)
@@ -544,6 +554,14 @@ func logSoapy(level sdrlogger.SDRLogLevel, message string) {
 	case sdrlogger.SSI:
 		levelStr = "SSI"
 	}
+	logFile, err := os.OpenFile("enumerate_sdrs.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer logFile.Close()
 
-	fmt.Printf("Soapy Logged: [%v] %v\n", levelStr, message)
+	_, err = logFile.WriteString(fmt.Sprintf("Soapy Logged: [%v] %v\n", levelStr, message))
+	if err != nil {
+		log.Panic(err)
+	}
 }
