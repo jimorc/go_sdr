@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"internal/soapy_logging"
+
+	"github.com/pothosware/go-soapy-sdr/pkg/sdrlogger"
+)
 
 func main() {
-	fmt.Println("Hello from gosdr")
+	soapy_logging.CreateSoapyLogfileName("go_sdr.log")
+	sdrlogger.RegisterLogHandler(soapy_logging.LogSoapy)
+	sdrlogger.SetLogLevel(sdrlogger.Info)
+	sdrlogger.Log(sdrlogger.Info, "go_sdr Logging")
 }
