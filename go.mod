@@ -2,15 +2,16 @@ module github.com/jimorc/go_sdr
 
 go 1.22.0
 
-require github.com/pothosware/go-soapy-sdr v0.7.4
+require (
+	github.com/pothosware/go-soapy-sdr v0.7.4
+	internal/gosdrgui v1.0.0
+)
 
-require internal/soapy_logging v1.0.0
-
-require internal/gui v1.0.0 // indirect
-
-require internal/gosdrgui v1.0.0
-
-require github.com/kr/pretty v0.3.1 // indirect
+require (
+	github.com/kr/pretty v0.3.1 // indirect
+	internal/gui v1.0.0 // indirect
+	internal/soapy_logging v1.0.0
+)
 
 require (
 	fyne.io/fyne/v2 v2.4.4

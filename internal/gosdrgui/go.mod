@@ -1,4 +1,4 @@
-module gosdrgui
+module github.com/jimorc/go_sdr/internal/gosdrgui
 
 go 1.22.0
 

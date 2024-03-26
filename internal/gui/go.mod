@@ -1,4 +1,4 @@
-module gui
+module gitrhub.com/jimorc/go_sdr/internal/gui
 
 go 1.22.0
 
