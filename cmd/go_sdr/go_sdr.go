@@ -1,7 +1,5 @@
 package main
 
-// go:generate fyne go_sdr -o bundled.go $GOPATH/go_sdr/cmd/go_sdr/images/start.svg
-
 import (
 	"internal/gosdrgui"
 	"internal/soapy_logging"

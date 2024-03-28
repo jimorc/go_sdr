@@ -22,3 +22,5 @@ require (
 )
 
 replace internal/gui => ../gui
+
+replace bundle => ../..

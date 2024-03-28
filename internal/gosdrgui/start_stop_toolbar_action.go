@@ -4,9 +4,9 @@ package gosdrgui
 import (
 	"fmt"
 	"internal/gui"
-	"log"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 )
 
 // StartStopToolbarAction is a gui.TwoStateToolbarAction that defines the actions performed by the SDR start/stop toolbar button.
@@ -16,15 +16,9 @@ type StartStopToolbarAction struct {
 
 // NewStartStopToolbarAction creates a StartStopToolbarAction object.
 func NewStartStopToolbarAction() *StartStopToolbarAction {
-	startIcon, err := fyne.LoadResourceFromPath("images/start.svg")
-	if err != nil {
-		log.Fatal(err)
-	}
+	startIcon := canvas.NewImageFromResource(resourceStartSvg).Resource
 
-	stopIcon, err := fyne.LoadResourceFromPath("images/stop.svg")
-	if err != nil {
-		log.Fatal(err)
-	}
+	stopIcon := canvas.NewImageFromResource(resourceStopSvg).Resource
 
 	startStop := StartStopToolbarAction{}
 	startStop.action = gui.NewTwoStateToolbarAction(startIcon, stopIcon, startStop.startActivated, startStop.stopActivated)
